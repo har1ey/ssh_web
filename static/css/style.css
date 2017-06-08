@@ -1,0 +1,12 @@
+#wrapper { margin: 0 0 0 20px; }
+#login { margin: 100px 100px 100px 0; }
+
+.serverList { list-style: none outside;  margin: 0 0 20px; padding: 0;
+ column-count: 3; column-gap: 20px; column-rule: 1px solid #ccc;
+ -moz-column-count: 3; -moz-column-gap: 10px; -moz-column-rule: 1px solid #ccc;
+ -webkit-column-count: 3; -webkit-column-gap: 10px; -webkit-column-rule: 1px solid #ccc;
+}
+
+.serverListItem { margin: 0 0 10px; }
+
+textarea#id_ssh_key { height: 80px; }

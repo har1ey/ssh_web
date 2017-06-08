@@ -1,0 +1,10 @@
+*.pyc
+__pycache__
+myvenv
+db.sqlite3
+.DS_Store
+key
+logs
+ssh_web/settings.py
+ssh.log
+manage.py

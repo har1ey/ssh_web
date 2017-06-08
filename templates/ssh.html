@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>SSH</title>
+    <link rel="stylesheet" type="text/css" href="{% get_static_prefix %}css/foundation.css">
+    <link rel="stylesheet" type="text/css" href="{% get_static_prefix %}css/style.css">
+</head>
+<body>
+<div class="top-bar">
+    <section class="top-bar-section">
+        <ul class="right">
+            {% if username %}
+                <li><a href="/admin/">Admin panel</a></li>
+                <li><a href="/auth/logout/">Logout ({{ username }})</a></li>
+            {% endif %}
+        </ul>
+    </section>
+</div>
+{% if username %}
+<div id="wrapper">
+<b>Servers:</b>
+<br>
+<br>
+
+<ul class="serverList">
+{% for server in servers %}
+    {% if server.server_select %}
+        <li class="serverListItem"><a href="/ssh/select/{{ server.id }}/"><img src="{% get_static_prefix %}img/true.jpg" width="25px" height="25px"></a>{{ server.server_ip }} {{ server.server_login }} - {{ server.server_comment }} - {{ server.server_select }}</li>
+    {% else %}
+        <li class="serverListItem"><a href="/ssh/select/{{ server.id }}/"><img src="{% get_static_prefix %}img/false.jpg" width="25px" height="25px"></a>{{ server.server_ip }} {{ server.server_login }} - {{ server.server_comment }} - {{ server.server_select }}</li>
+    {% endif %}
+{% endfor %}
+</ul>
+
+<form action="/ssh/select/all/" method="post">
+    {% csrf_token %}
+    <input type="submit" class="button" value="All Servers" name="all">
+    <input type="submit" class="button" value="No one" name="none">
+    <input type="submit" class="button" value="Get info" name="info_key">
+</form>
+
+<form action="/ssh/key/" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" class="button" value="CHECK KEY" name="check_key">
+    {% if vision %}
+        <input type="submit" class="button" value="ADD KEY" name="add_key">
+        <input type="submit" class="button" value="DEL KEY" name="del_key">
+    {% else %}
+        <input type="submit" class="button" value="ADD KEY" name="add_key" disabled>
+        <input type="submit" class="button" value="DEL KEY" name="del_key" disabled>
+    {% endif %}
+    {% if not vision_last %}
+        <input type="submit" class="button" value="LAST KEY" name="last_key">
+    {% else %}
+        <input type="submit" class="button" value="LAST KEY" name="last_key" disabled>
+    {% endif %}
+
+</form>
+<b>Logs: </b>
+{% for key, value in logs %}
+    <p>{{ key }} -  {% autoescape off %}{{ value }}{% endautoescape %}</p>
+{% endfor %}
+<br>
+<b>History</b> (last {{ hit }} sample):
+<br>
+{% for key in keys %}
+    {% autoescape off %}{{ key.key_action }}{% endautoescape %}
+    <p style="font-size: small">{{ key.ssh_key }}</p>
+{% endfor %}
+{{ ggg }}
+{% if info_show %}
+<b>Info about {{ info_ip }}: </b>
+{% for key, value in info %}
+    <p style="font-size: small"><a href="/ssh/info/{{ key }}/">ssh-rsa</a> {{ value }}</p>
+{%  endfor %}
+
+<form action="/ssh/key/clear/" method="post">
+   {% csrf_token %}
+   <input type="submit" class="button" value="Clear Info" name="clear_key">
+</form>
+{% endif %}
+
+
+{% else %}
+    {% block login %} {% endblock %}
+{% endif %}
+
+</body>
+</html>
